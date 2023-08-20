@@ -1,0 +1,70 @@
+1)#include <stdio.h>
+#include <stdlib.h>
+typedef struct node {
+int data;
+struct node *prev;
+struct node *next;} Node;
+Node *insert(Node *head, int key, int data);
+Node *delete(Node *head, int data);
+int main() {
+Node *head = NULL;
+int key, data;char op; while (1) {
+printf("Enter operation (i for insert, d for delete, q for quit): ");
+scanf(" %c", &op);
+if (op == 'q') {break;}
+switch (op) {
+case 'i':
+printf("Enter key and data to insert: ");
+scanf("%d %d", &key, &data);
+head = insert(head, key, data);break;
+case 'd':printf("Enter data to delete: ");
+scanf("%d", &data);
+head = delete(head, data);break;
+default:printf("Invalid operation.\n");
+break; }
+printf("List: ");
+Node *curr = head;
+while (curr != NULL) {
+printf("%d ", curr->data);
+curr = curr->next; }
+printf("\n"); }return 0;}
+Node *insert(Node *head, int key, int data) {
+Node *new_node = (Node *) malloc(sizeof(Node));
+new_node->data = data;
+new_node->prev = NULL;
+new_node->next = NULL;
+if (head == NULL) {
+head = new_node;
+} else {Node *curr = head;
+while (curr != NULL &&curr->data != key) {
+curr = curr->next; }
+if (curr == NULL) {
+Node *tail = head;
+while (tail->next != NULL) {
+tail = tail->next;}
+tail->next = new_node;
+new_node->prev = tail;
+} else {
+if (curr->prev != NULL) {
+curr->prev->next = new_node;
+new_node->prev = curr->prev;
+} else { head = new_node;}
+new_node->next = curr;
+curr->prev = new_node; } }
+return head;}
+Node *delete(Node *head, int data) {
+Node *curr = head;
+while (curr != NULL &&curr->data != data) {
+curr = curr->next;}
+if (curr == NULL) {
+printf("Error: data not found.\n");
+} else {
+if (curr->prev != NULL) {
+curr->prev->next = curr->next;
+} else {
+head = curr->next;}
+if (curr->next != NULL) {
+curr->next->prev = curr->prev; }
+free(curr);}
+return head;
+}
