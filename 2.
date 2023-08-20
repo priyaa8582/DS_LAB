@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_NAME_LENGTH 50
+#define MAX_DEPT_LENGTH 50
+#define MAX_EMPLOYEES 100
+
+// Define the EMPLOYEE structure
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    int id;
+    char dept[MAX_DEPT_LENGTH];
+    float salary;
+} EMPLOYEE;
+
+// Function to find the total salary of employees in a specified department
+float findDeptSalary(EMPLOYEE **employees, int n, char *dept) {
+    float totalSalary = 0;
+    for (int i = 0; i < n; i++) {
+        if (strcmp(employees[i]->dept, dept) == 0) {
+            totalSalary += employees[i]->salary;
+        }
+    }
+    return totalSalary;
+}
+
+int main() {
+    int n;
+    printf("Enter the number of employees: ");
+    scanf("%d", &n);
+
+    // Allocate memory for an array of pointers to EMPLOYEE structures
+    EMPLOYEE **employees = (EMPLOYEE **)malloc(n * sizeof(EMPLOYEE *));
+    if (employees == NULL) {
+        printf("Error: Failed to allocate memory for employees\n");
+        return 1;
+    }
+
+    // Read employee data and allocate memory for each EMPLOYEE structure
+    for (int i = 0; i < n; i++) {
+        employees[i] = (EMPLOYEE *)malloc(sizeof(EMPLOYEE));
+        if (employees[i] == NULL) {
+            printf("Error: Failed to allocate memory for employee %d\n", i+1);
+            return 1;
+        }
+
+        printf("\nEnter data for employee %d:\n", i+1);
+        printf("Name: ");
+        scanf("%s", employees[i]->name);
+        printf("ID: ");
+        scanf("%d", &employees[i]->id);
+        printf("Department: ");
+        scanf("%s", employees[i]->dept);
+        printf("Salary: ");
+        scanf("%f", &employees[i]->salary);
+    }
+
+    // Display employee data
+    printf("\nEmployee data:\n");
+    for (int i = 0; i < n; i++) {
+        printf("\nEmployee %d:\n", i+1);
+        printf("Name: %s\n", employees[i]->name);
+        printf("ID: %d\n", employees[i]->id);
+        printf("Department: %s\n", employees[i]->dept);
+        printf("Salary: %.2f\n", employees[i]->salary);
+    }
+
+    // Find the total salary of employees in a specified department
+    char dept[MAX_DEPT_LENGTH];
+    printf("\nEnter department to find total salary: ");
+    scanf("%s", dept);
+    float deptSalary = findDeptSalary(employees, n, dept);
+    printf("Total salary of employees in %s department: %.2f\n", dept, deptSalary);
+
+    // Free allocated memory
+    for (int i = 0; i < n; i++) {
+        free(employees[i]);
+    }
+    free(employees);
+
+    return 0;
+}
