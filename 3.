@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+void push(int element) {
+    if (top >= MAX-1) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    top++;
+    stack[top] = element;
+}
+
+int pop() {
+    if (top == -1) {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+    int element = stack[top];
+    top--;
+    return element;
+}
+
+int check_palindrome(char string[]) {
+    int i;
+    for (i = 0; string[i] != '\0'; i++) {
+        push(string[i]);
+    }
+    for (i = 0; string[i] != '\0'; i++) {
+        if (string[i] != pop()) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void display_stack() {
+    if (top == -1) {
+        printf("Stack is empty\n");
+        return;
+    }
+    int i;
+    printf("Stack: ");
+    for (i = top; i >= 0; i--) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, element;
+    char string[MAX];
+    do {
+        printf("\nSelect an operation:\n");
+        printf("1. Push an element on to stack\n");
+        printf("2. Pop an element from stack\n");
+        printf("3. Check palindrome using stack\n");
+        printf("4. Display stack status\n");
+        printf("5. Exit\n");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter an element to push: ");
+                scanf("%d", &element);
+                push(element);
+                break;
+            case 2:
+                element = pop();
+                if (element != -1) {
+                    printf("Popped element: %d\n", element);
+                }
+                break;
+            case 3:
+                printf("Enter a string to check palindrome: ");
+                scanf("%s", string);
+                if (check_palindrome(string)) {
+                    printf("'%s' is a palindrome\n", string);
+                } else {
+                    printf("'%s' is not a palindrome\n", string);
+                }
+                break;
+            case 4:
+                display_stack();
+                break;
+            case 5:
+                printf("Exiting program\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (choice != 5);
+    return 0;
+}
