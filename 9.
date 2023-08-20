@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct node {
+char *name;
+struct node *next;};
+void insert_name(struct node **head,
+char *new_name) {
+struct node *new_node = (struct node*)
+malloc(sizeof(struct node));
+new_node->name = (char*) malloc
+((strlen(new_name)+1)*sizeof(char));
+strcpy(new_node->name, new_name);
+new_node->next = NULL;
+if (*head == NULL || strcmp(new_name,
+(*head)->name) < 0) {
+new_node->next = *head;
+*head = new_node; }
+else {
+struct node *current = *head;
+while (current->next != NULL &&strcmp(new_name,
+current->next->name) >= 0) {
+current = current->next; }
+new_node->next = current->next;
+current->next = new_node; }}
+void delete_name(struct node **head, char *name) {
+if (*head == NULL) {
+return;}
+if (strcmp((*head)->name, name) == 0) {
+struct node *temp = *head;
+*head = (*head)->next;
+free(temp);
+return; }
+struct node *prev = *head;
+while (prev->next != NULL &&
+strcmp(prev->next->name, name) != 0) {
+prev = prev->next; }
+if (prev->next == NULL) {
+return; }
+struct node *temp = prev->next;
+prev->next = temp->next;
+free(temp);}
+void print_list(struct node *head) {
+printf("List of names:\n");
+while (head != NULL) {
+printf("%s\n", head->name);
+head = head->next; }}
+int main() {
+struct node *head = NULL;
+insert_name(&head, "Alice");
+insert_name(&head, "Bob");
+insert_name(&head, "Charlie");
+insert_name(&head, "David");
+insert_name(&head, "Eve");
+print_list(head);
+delete_name(&head, "David");
+print_list(head);
+insert_name(&head, "Frank");
+print_list(head);
+return 0;}
